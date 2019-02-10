@@ -1,0 +1,80 @@
+<ion-header>
+    <ion-navbar>
+        <button menuToggle *ngIf="!selectedItem">
+            <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title>Contact Info</ion-title>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+    <ion-list inset>
+        <form [ngFormModel]="contactForm">
+            <ion-item>
+                <ion-label floating>First name</ion-label>
+                <ion-input type="text" ngControl="firstName" [(ngModel)]="contact.firstName"></ion-input>
+                <div *ngIf="firstName.hasError('required') " class="error-box">* First name is required</div>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Last name</ion-label>
+                <ion-input type="text" ngControl="lastName" [(ngModel)]="contact.lastName"></ion-input>
+                <div *ngIf="lastName.hasError('required') && lastName.touched" class="error-box">* Last name is required</div>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Image URL</ion-label>
+                <ion-input type="text" ngControl="imageUrl" [(ngModel)]="contact.imageUrl"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Skype</ion-label>
+                <ion-input type="text" ngControl="skype" [(ngModel)]="contact.skype"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Twitter</ion-label>
+                <ion-input ngControl="twitter" [(ngModel)]="contact.twitter"></ion-input>
+            </ion-item>
+            <ion-item>
+                <ion-label floating>Notes</ion-label>
+                <ion-input type="text" ngControl="notes" [(ngModel)]="contact.notes"></ion-input>
+            </ion-item>
+            <div class="button-bar">
+                <button class="button icon-left button-positive" [disabled]="!contactForm.valid" (click)="save()">
+                    <ion-icon ios="ios-create" md="md-create"></ion-icon>Save</button>
+                <button class="button icon-left button-positive" (click)="back()">
+                    <ion-icon ios="ios-arrow-back" md="md-arrow-back"></ion-icon>Back
+                </button>
+            </div>
+        </form>
+    </ion-list>
+    <!-- Table -->
+    <ion-grid *ngIf="contact.id">
+        <ion-row>
+            <ion-col>
+                <ion-label style="text-align: center;font-weight: bold;font-size: 17px;">Groups</ion-label>
+            </ion-col>
+        </ion-row>
+        <ion-row>
+            <ion-col  width-80>
+                <ion-item>
+                    <ion-select [(ngModel)]="selectedGroupId" placeholder="Select group">
+                        <ion-option *ngFor="let group of remainingGroups" [value]="group.id">{{ group.name }}</ion-option>
+                    </ion-select>
+                </ion-item>
+            </ion-col>
+            <ion-col>
+                <button name="add" class="button icon-left button-positive" (click)="addSelectedGroup()" (disabled)="!selectedGroupId" end>
+                    <ion-icon ios="ios-add-circle" md="md-add-circle"></ion-icon>
+                </button>
+            </ion-col>
+        </ion-row>
+        <ion-row *ngFor="let contactGroup of contactGroups">
+            <ion-col>{{ contactGroup.group.name }}</ion-col>
+            <ion-col>
+                <button name="trash" class="button icon-left button-positive" (click)="removeGroup(contactGroup)" end>
+                    <ion-icon ios="ios-trash" md="md-trash"></ion-icon>
+                </button>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+    <ion-list inset *ngIf="contact.id">
+        <contact-info-list></contact-info-list>
+    </ion-list>
+</ion-content>
